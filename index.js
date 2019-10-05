@@ -21,10 +21,12 @@ console.log({
 const token = "04d180b2-9c59-4f9f-adae-49300994aac0";
 
 const Api = require("./objects/api");
+const Classifier = require("./objects/classifier");
 
 const TinderApi = new Api(token);
+const GirlClassifier = new Classifier();
 
-const scrape = async () => {
+const Scraper = async () => {
   try {
     const profile = await TinderApi.profile();
     const matches = await TinderApi.matches();
@@ -45,4 +47,35 @@ const scrape = async () => {
   }
 };
 
-scrape();
+// console.log(GirlClassifier.like());
+// Scraper();
+
+const express = require("express");
+const app = express();
+const path = require("path");
+const router = express.Router();
+
+app.use("/images", express.static(__dirname + "/images"));
+
+router.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname + "/index.html"));
+  //__dirname : It will resolve to your project folder.
+});
+
+router.get("/classifier-render", function(req, res) {
+  res.status(200);
+  res.send(GirlClassifier.render());
+});
+
+router.get("/classifier-like", function(req, res) {
+  res.status(200);
+  res.send(GirlClassifier.like());
+});
+
+router.get("classifier-dislike", function(req, res) {
+  res.status(200);
+  res.send(GirlClassifier.dislike());
+});
+
+app.use("/", router);
+app.listen(process.env.port || 3000);

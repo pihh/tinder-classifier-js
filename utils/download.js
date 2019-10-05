@@ -25,7 +25,6 @@ const image = async function(url) {
 };
 
 const images = async function(array) {
-  console.log("will download images", array.length);
   try {
     for (_image of array) {
       await image(_image);

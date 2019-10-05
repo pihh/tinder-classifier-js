@@ -1,0 +1,55 @@
+<style>
+  div {
+    text-align: center;
+  }
+  img {
+    width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 5px 7px #aaa;
+    margin-bottom: 16px;
+  }
+</style>
+<div>
+  <img id="image" />
+</div>
+<div>
+  <button id="like">Like</button>
+  <button id="dislike">Dislike</button>
+</div>
+
+<script>
+  lock();
+  (function() {
+    fetch("classifier-render")
+      .then(response => response.json())
+      .then(data => {
+        next(data);
+      });
+  })();
+
+  function lock() {}
+
+  function unlock() {}
+
+  function like() {
+    lock();
+
+    next();
+  }
+
+  function dislike() {
+    lock();
+
+    next();
+  }
+
+  function next(data = {}) {
+    if (data.success) {
+      unlock();
+      document.getElementById("image").src =
+        "/images/unclassified/" + data.data;
+      return;
+    }
+    alert("No more images");
+  }
+</script>
