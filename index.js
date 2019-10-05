@@ -24,19 +24,15 @@ const Api = require("./objects/api");
 
 const TinderApi = new Api(token);
 
-const run = async () => {
+const scrape = async () => {
   try {
     const profile = await TinderApi.profile();
     const matches = await TinderApi.matches();
     const nearby = await TinderApi.nearby_persons();
 
-    await nearby[0].download_images();
-    // console.log({
-    //   success: true,
-    //   profile,
-    //   matches,
-    //   nearby
-    // });
+    for (person of nearby) {
+      await person.download_images();
+    }
 
     return Promise.resolve({
       profile,
@@ -49,4 +45,4 @@ const run = async () => {
   }
 };
 
-run();
+scrape();
