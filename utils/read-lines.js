@@ -40,4 +40,4 @@ function readLines(path) {
 
 // readLines(input, func);
 
-module.exports(readLines);
+module.exports = readLines;

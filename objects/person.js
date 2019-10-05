@@ -11,7 +11,13 @@ to like a profile we find interesting.
 */
 
 const GENDERS = ["Any", "Female", "Male"];
-const FILE = class Person {
+const FILE = "./images/unclassified.txt";
+
+const fs = require("fs");
+const readLines = require("../utils/read-lines");
+const download = require("../utils/download");
+
+class Person {
   constructor(data, api) {
     // Add defaults
     data.jobs = data.jobs || [];
@@ -49,7 +55,22 @@ const FILE = class Person {
     //return f"{self.id}  -  {self.name} ({self.birth_date.strftime('%d.%m.%Y')})"
   }
 
-  download_images() {}
-};
+  async download_images() {
+    try {
+      const unclassifiedimages = readLines(FILE);
+      if (unclassifiedimages.indexOf(this.id) > -1) {
+        return true;
+      }
+
+      await download.images(this.photos);
+
+      fs.appendFileSync(FILE, this.id + "\n");
+
+      return true;
+    } catch (ex) {
+      throw ex;
+    }
+  }
+}
 
 module.exports = Person;
