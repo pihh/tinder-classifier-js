@@ -8,7 +8,9 @@ The label like/dislike is encoded as 1/0 in the beginning of the filenmae.
 
 const FOLDER = "./images/unclassified";
 const FAIL_RESPONSE = { success: false, data: "No more files..." };
+
 const fs = require("fs");
+const moveClassified = require("../utils/move-classified");
 
 function getUnclassefiedImages() {
   return fs
@@ -57,26 +59,22 @@ class Classifier {
     };
   }
 
-  like() {
-    fs.rename(
-      FOLDER + "/" + this.images[this.index],
-      FOLDER + "/like_" + this.images[this.index],
-      function(err) {
-        if (err) throw err;
-      }
-    );
+  evaluate(likes) {
+    const image = this.images[this.index];
+    const path = likes ? "/like_" : "/dislike_";
+    fs.rename(FOLDER + "/" + image, FOLDER + path + image, function(err) {
+      if (err) throw err;
+      moveClassified.file(path + image);
+    });
     return this.next_image();
   }
 
+  like() {
+    return this.evaluate(true);
+  }
+
   dislike() {
-    fs.rename(
-      FOLDER + "/" + this.images[this.index],
-      FOLDER + "/dislike_" + this.images[this.index],
-      function(err) {
-        if (err) throw err;
-      }
-    );
-    return this.next_image();
+    return this.evaluate(false);
   }
 }
 

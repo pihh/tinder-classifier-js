@@ -47,9 +47,6 @@ const Scraper = async () => {
   }
 };
 
-// console.log(GirlClassifier.like());
-// Scraper();
-
 const express = require("express");
 const app = express();
 const path = require("path");
