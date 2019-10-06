@@ -55,8 +55,6 @@ const app = express();
 const path = require("path");
 const router = express.Router();
 
-app.use("/images", express.static(__dirname + "/images"));
-
 router.get("/", function(req, res) {
   res.sendFile(path.join(__dirname + "/index.html"));
   //__dirname : It will resolve to your project folder.
@@ -72,10 +70,24 @@ router.get("/classifier-like", function(req, res) {
   res.send(GirlClassifier.like());
 });
 
-router.get("classifier-dislike", function(req, res) {
+router.get("/classifier-dislike", function(req, res) {
   res.status(200);
   res.send(GirlClassifier.dislike());
 });
 
+router.get("/scrape", function(req, res) {
+  Scraper()
+    .then(data => {
+      res.status(200);
+      res.send(data);
+    })
+    .catch(ex => {
+      res.status(500);
+      res.send(ex);
+    });
+});
+
+app.use("/images", express.static(__dirname + "/images"));
+app.use("/public", express.static(__dirname + "/public"));
 app.use("/", router);
 app.listen(process.env.port || 3000);

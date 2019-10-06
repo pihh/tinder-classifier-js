@@ -7,7 +7,7 @@ The label like/dislike is encoded as 1/0 in the beginning of the filenmae.
 */
 
 const FOLDER = "./images/unclassified";
-
+const FAIL_RESPONSE = { success: false, data: "No more files..." };
 const fs = require("fs");
 
 function getUnclassefiedImages() {
@@ -40,19 +40,13 @@ class Classifier {
 
       throw "No images";
     } catch (ex) {
-      return {
-        success: false,
-        data: "No more files"
-      };
+      return FAIL_RESPONSE;
     }
   }
 
   next_image() {
     if (this.index === this.last) {
-      return {
-        success: false,
-        data: "No more files"
-      };
+      return FAIL_RESPONSE;
     }
 
     this.index++;
@@ -79,7 +73,7 @@ class Classifier {
       FOLDER + "/" + this.images[this.index],
       FOLDER + "/dislike_" + this.images[this.index],
       function(err) {
-        if (err) throw +err;
+        if (err) throw err;
       }
     );
     return this.next_image();

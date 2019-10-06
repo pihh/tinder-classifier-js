@@ -5,7 +5,8 @@ const randomIntFromInterval = require("./random-int-from-interval");
 // Added a sleep so tinder servers dont think we are trying something
 const image = async function(url) {
   try {
-    const path = "./images/" + url.substr(url.lastIndexOf("/") + 1);
+    const path =
+      "./images/unclassified/" + url.substr(url.lastIndexOf("/") + 1);
     const res = await fetch(url);
     const fileStream = fs.createWriteStream(path);
     await new Promise((resolve, reject) => {
