@@ -10,7 +10,7 @@ const FOLDER = "./images/unclassified";
 const FAIL_RESPONSE = { success: false, data: "No more files..." };
 
 const fs = require("fs");
-const moveClassified = require("../utils/move-classified");
+const parseImage = require("../utils/parse-image");
 
 function getUnclassefiedImages() {
   return fs
@@ -60,13 +60,20 @@ class Classifier {
   }
 
   evaluate(likes) {
-    const image = this.images[this.index];
-    const path = likes ? "/like_" : "/dislike_";
-    fs.rename(FOLDER + "/" + image, FOLDER + path + image, function(err) {
-      if (err) throw err;
-      moveClassified.file(path + image);
+    return new Promise((res, rej) => {
+      const image = this.images[this.index];
+      const path = likes ? "/like_" : "/dislike_";
+      fs.rename(FOLDER + "/" + image, FOLDER + path + image, err => {
+        if (err) rej(err);
+        parseImage(path + image)
+          .then(data => {
+            res(this.next_image());
+          })
+          .catch(ex => {
+            rej(ex);
+          });
+      });
     });
-    return this.next_image();
   }
 
   like() {

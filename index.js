@@ -63,13 +63,27 @@ router.get("/classifier-render", function(req, res) {
 });
 
 router.get("/classifier-like", function(req, res) {
-  res.status(200);
-  res.send(GirlClassifier.like());
+  GirlClassifier.like()
+    .then(data => {
+      res.status(200);
+      res.send(data);
+    })
+    .catch(ex => {
+      res.status(500);
+      res.send(ex);
+    });
 });
 
 router.get("/classifier-dislike", function(req, res) {
-  res.status(200);
-  res.send(GirlClassifier.dislike());
+  GirlClassifier.dislike()
+    .then(data => {
+      res.status(200);
+      res.send(data);
+    })
+    .catch(ex => {
+      res.status(500);
+      res.send(ex);
+    });
 });
 
 router.get("/scrape", function(req, res) {

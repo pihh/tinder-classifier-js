@@ -12,6 +12,7 @@
     "@tensorflow/tfjs": "^1.2.10",
     "csvtojson": "^2.0.10",
     "express": "^4.17.1",
+    "jimp": "^0.8.4",
     "ml-regression": "^5.0.0",
     "node-fetch": "^2.6.0",
     "request": "^2.88.0"
