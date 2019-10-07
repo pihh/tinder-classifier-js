@@ -2,8 +2,10 @@
 
 // Links :
 // https://medium.com/@joel.barmettler/train-an-ai-to-swipe-tinder-for-you-bc226df8709d
-// https://www.youtube.com/watch?v=ogzNx_TgmFU&list=PL2Rze1Dshha3tK21ky-wXdntH9rBwnWaO&index=5
+//
 
+// Linear Regression Find if a set of predicted variables does a good job predicting output
+// Logistic Regression Yes or no
 const linearRegression = require("ml-regression").SLR;
 const inputs = [80, 60, 10, 20, 30];
 const outputs = [20, 40, 30, 50, 60];
@@ -18,10 +20,16 @@ console.log({
 });
 */
 
-const token = "04d180b2-9c59-4f9f-adae-49300994aac0";
+const token = "a470ac45-93af-439d-a912-51a101067606";
 
 const Api = require("./objects/api");
 const Classifier = require("./objects/classifier");
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path");
+
+const app = express();
+const router = express.Router();
 
 const TinderApi = new Api(token);
 const GirlClassifier = new Classifier();
@@ -47,10 +55,22 @@ const Scraper = async () => {
   }
 };
 
-const express = require("express");
-const app = express();
-const path = require("path");
-const router = express.Router();
+//app.use(bodyParser);
+// app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+    return res.status(200).json({});
+  }
+  next();
+});
 
 router.get("/", function(req, res) {
   res.sendFile(path.join(__dirname + "/index.html"));
@@ -96,6 +116,17 @@ router.get("/scrape", function(req, res) {
       res.status(500);
       res.send(ex);
     });
+});
+
+router.post("/crop-image", function(req, res) {
+  if (req.body.name) {
+    const name = req.body.name;
+    const m = req.body.measures;
+    res.send(GirlClassifier.cropImage(name, m[0], m[1], m[2], m[3]));
+  } else {
+    res.status(200);
+    res.send({});
+  }
 });
 
 app.use("/images", express.static(__dirname + "/images"));

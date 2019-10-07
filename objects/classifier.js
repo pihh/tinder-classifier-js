@@ -11,6 +11,7 @@ const FAIL_RESPONSE = { success: false, data: "No more files..." };
 
 const fs = require("fs");
 const parseImage = require("../utils/parse-image");
+const TinderImage = require("./image");
 
 function getUnclassefiedImages() {
   return fs
@@ -82,6 +83,10 @@ class Classifier {
 
   dislike() {
     return this.evaluate(false);
+  }
+
+  cropImage(name, x0, y0, x1, y1) {
+    return new TinderImage(name).crop(x0, y0, x1, y1);
   }
 }
 

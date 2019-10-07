@@ -74,7 +74,6 @@ class tinderAPI {
   }
 
   getRequest(url) {
-    console.log;
     return new Promise((res, rej) => {
       fetch(`${TINDER_URL}/${url}`, {
         method: "get",

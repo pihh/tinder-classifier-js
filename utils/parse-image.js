@@ -7,7 +7,7 @@ You find the .bp file for the tensorflow mobilenet coco graph in my Github repos
 Let's open it as a Tensorflow graph:
  */
 const FOLDER = "./images/unclassified";
-const Jimp = require("jimp");
+const Jimp = require("jimp2");
 const moveClassified = require("./move-classified");
 
 /*
@@ -31,6 +31,8 @@ async function convertToGrayScale(image) {
     throw ex;
   }
 }
+
+// STEP 1
 
 const parseImage = async function(image) {
   try {

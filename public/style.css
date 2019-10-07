@@ -1,8 +1,14 @@
 div {
   text-align: center;
 }
-img {
+#measure {
+  position: absolute;
+  left: -10000px;
+  top: -100000px;
+}
+#image {
   width: 500px;
+  height: 500px;
   border-radius: 8px;
   box-shadow: 0 8px 4px #aaa;
   margin-bottom: 16px;
