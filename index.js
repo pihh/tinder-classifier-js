@@ -24,6 +24,7 @@ const token = "a470ac45-93af-439d-a912-51a101067606";
 
 const Api = require("./objects/api");
 const Classifier = require("./objects/classifier");
+const Model = require("./objects/model");
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -34,6 +35,7 @@ const router = express.Router();
 const TinderApi = new Api(token);
 const GirlClassifier = new Classifier();
 
+const _m = new Model();
 const Scraper = async () => {
   try {
     const profile = await TinderApi.profile();

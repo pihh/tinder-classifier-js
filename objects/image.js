@@ -39,7 +39,8 @@ class TinderImage {
       const img = await Jimp.read(this.find());
       await img
         .greyscale()
-        .crop(x0, y0, x1 - x0, y1 - y0)
+        .resize(256, 256) // resize
+        // .crop(x0, y0, x1 - x0, y1 - y0)
         .write(this.find()); // save
 
       return {

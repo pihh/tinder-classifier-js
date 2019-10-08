@@ -236,5 +236,70 @@
           break;
       }
     });
+
+    class Model {
+      constructor() {
+        // Sequencial model
+
+        this.model = tf.Sequential();
+        console.dir("model created");
+        console.dir("create layers");
+        this.model.add(
+          tf.layers.conv2d({
+            inputShape: [256, 256, 1], // 256x256 px , greyscale
+            kernelSize: 5, // 5x5 px filter window -> vai correndo pela imagem e filtrando
+            filters: 8, //
+            strides: 1, // How many px this is sliding?
+            activation: "relu", // very commonm withimage classification and convultional networkds
+            kernelInitializer: "VarianceScaling" //
+          })
+        );
+
+        this.model.add(
+          tf.layers.maxPooling2d({
+            poolSize: [2, 2], // sliding window 2x2 pixels
+            strides: [2, 2] // need to understand this
+          })
+        );
+
+        // Second layer
+        this.model.add(
+          tf.layers.conv2d({
+            //inputShape: [256, 256, 1], // 256x256 px , greyscale
+            kernelSize: 5, // 5x5 px filter window -> vai correndo pela imagem e filtrando
+            filters: 16, //
+            strides: 1, // How many px this is sliding?
+            activation: "relu", // very commonm withimage classification and convultional networkds
+            kernelInitializer: "VarianceScaling" //
+          })
+        );
+
+        this.model.add(
+          tf.layers.maxPooling2d({
+            poolSize: [2, 2], // sliding window 2x2 pixels
+            strides: [2, 2] // need to understand this
+          })
+        );
+
+        // Add Flat Layer
+        this.model.add(tf.layers.flatten());
+
+        // Dense Layer
+        this.model.add(
+          tf.layers.dense({
+            units: 10,
+            kernelInitializer: "VarianceScaling",
+            activation: "softmax"
+          })
+        );
+        createLogEntry("Layers created");
+      }
+
+      train() {}
+
+      evaluate() {}
+    }
+
+    new Model();
   </script>
 </body>
