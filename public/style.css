@@ -12,6 +12,7 @@ div {
   border-radius: 8px;
   box-shadow: 0 8px 4px #aaa;
   margin-bottom: 16px;
+  object-fit: cover;
 }
 .btn {
   position: relative;

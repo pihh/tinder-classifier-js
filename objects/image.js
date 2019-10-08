@@ -36,6 +36,9 @@ class TinderImage {
 
   async crop(x0, y0, x1, y1) {
     try {
+      // First, find person,
+      // then cut a square around that person
+      // then resize the square to 256,256
       const img = await Jimp.read(this.find());
       await img
         .greyscale()
