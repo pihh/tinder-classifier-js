@@ -1,4 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
+import { Script } from "./src/scripts/script";
 
 let model;
 let locked;
@@ -52,7 +53,7 @@ function dislike() {
 function next(data = {}) {
   if (data.success) {
     var img = new Image();
-
+    img.crossOrigin = "";
     img.onerror = function() {
       dislike();
     };
@@ -139,3 +140,5 @@ document.addEventListener("keyup", function(event) {
 // Bind clicks
 document.getElementById("like").addEventListener("click", like);
 document.getElementById("dislike").addEventListener("click", dislike);
+
+new Script().run();

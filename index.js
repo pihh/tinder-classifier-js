@@ -28,6 +28,7 @@ const Model = require("./objects/model");
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
 const router = express.Router();
@@ -57,10 +58,10 @@ const Scraper = async () => {
   }
 };
 
-//app.use(bodyParser);
-// app.use(express.json());
+// app.use(cors);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -76,7 +77,6 @@ app.use((req, res, next) => {
 
 router.get("/", function(req, res) {
   res.sendFile(path.join(__dirname + "/index.html"));
-  //__dirname : It will resolve to your project folder.
 });
 
 router.get("/classifier-render", function(req, res) {
