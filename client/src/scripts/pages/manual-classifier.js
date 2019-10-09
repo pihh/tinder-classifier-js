@@ -8,9 +8,8 @@ let imageHadError;
 const API = "http://localhost:3000/";
 
 const $image = document.getElementById("image");
-// const ctx = canvas.getContext("2d");
-// RUN THIS ON DOCUMENT LOAD
-(function() {
+
+function loadManualClassifier() {
   lock();
   cocoSsd.load().then(_model => {
     unlock();
@@ -22,12 +21,30 @@ const $image = document.getElementById("image");
         next(data);
       });
   });
-})();
+  // bind key press listeners
+  document.addEventListener("keyup", function(event) {
+    if (event.defaultPrevented) {
+      return;
+    }
+    const key = event.key || event.keyCode;
+    switch (key) {
+      case "ArrowLeft":
+        dislike();
+        break;
+      case "ArrowRight":
+        like();
+        break;
+    }
+  });
+  // Bind clicks
+  document.getElementById("like").addEventListener("click", like);
+  document.getElementById("dislike").addEventListener("click", dislike);
+}
 
 function lock() {
   // https://cdn.dribbble.com/users/63485/screenshots/4388983/liquid-preloader_dribbble_v2.gif
   if (locked) return;
-  $image.src = "/loading.gif";
+  $image.src = "public/images/loading.gif";
   locked = true;
 }
 
@@ -122,26 +139,8 @@ function cropImageFromPrediction(prediction, src) {
   }).then(response => response.json());
 }
 
-// bind key press listeners
-document.addEventListener("keyup", function(event) {
-  if (event.defaultPrevented) {
-    return;
-  }
-
-  var key = event.key || event.keyCode;
-  // console.log({ key });
-
-  switch (key) {
-    case "ArrowLeft":
-      dislike();
-      break;
-
-    case "ArrowRight":
-      like();
-      break;
-  }
-});
-
-// Bind clicks
-document.getElementById("like").addEventListener("click", like);
-document.getElementById("dislike").addEventListener("click", dislike);
+export const ManualClassifier = {
+  load: loadManualClassifier,
+  like,
+  dislike
+};

@@ -73,9 +73,14 @@ const Router = router => {
 
   router.post("/crop-image", function(req, res) {
     if (req.body.name) {
-      const name = req.body.name;
-      const m = req.body.measures;
-      res.send(TinderClassifier.cropImage(name, m[0], m[1], m[2], m[3]));
+      try {
+        const name = req.body.name;
+        const m = req.body.measures;
+        res.send(TinderClassifier.cropImage(name, m[0], m[1], m[2], m[3]));
+      } catch (ex) {
+        res.status(500);
+        res.send({ error: ex });
+      }
     } else {
       res.status(200);
       res.send({});

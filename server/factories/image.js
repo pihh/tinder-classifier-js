@@ -54,18 +54,6 @@ class TinderImage {
     } catch (ex) {
       throw ex;
     }
-    // return new Promise((res, rej) => {
-    //   const file = this.find();
-    //   Jimp.read(file)
-    //     .then(image => {
-    //       image.crop(x0, y0, x1 - x0, y1 - y0);
-    //       image.write(this.find());
-    //       res();
-    //     })
-    //     .catch(err => {
-    //       rej("Cannot crop image");
-    //     });
-    // });
   }
 }
 
