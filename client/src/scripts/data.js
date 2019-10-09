@@ -4,7 +4,7 @@ import * as tf from "@tensorflow/tfjs";
 
 console.dir("@TODO: get image set meta and update NUM_DATASET_ELEMENTS");
 
-export class MnistData {
+export class Data {
   constructor() {
     this.shuffledTrainIndex = 0;
     this.shuffledTestIndex = 0;

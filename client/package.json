@@ -5,7 +5,8 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.6.2",
     "@tensorflow-models/coco-ssd": "^2.0.0",
-    "@tensorflow/tfjs": "^1.2.11"
+    "@tensorflow/tfjs": "^1.2.11",
+    "@tensorflow/tfjs-vis": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.3",
