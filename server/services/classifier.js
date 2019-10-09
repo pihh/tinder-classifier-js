@@ -10,8 +10,9 @@ const FOLDER = "./images/unclassified";
 const FAIL_RESPONSE = { success: false, data: "No more files..." };
 
 const fs = require("fs");
+
 const parseImage = require("../utils/parse-image");
-const TinderImage = require("./image");
+const TinderImage = require("../factories/image");
 
 function getUnclassefiedImages() {
   return fs
@@ -24,12 +25,17 @@ function getUnclassefiedImages() {
     );
 }
 
+let instance;
+
 class Classifier {
   constructor() {
+    if (instance) return instance;
     // Get all the images from folder
     this.images = getUnclassefiedImages();
     this.index = 0;
     this.last = this.images.length - 1;
+
+    instance = this;
   }
 
   render() {
@@ -90,4 +96,4 @@ class Classifier {
   }
 }
 
-module.exports = Classifier;
+module.exports = new Classifier();

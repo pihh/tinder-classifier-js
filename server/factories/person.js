@@ -51,10 +51,6 @@ class Person {
     return this._api.dislike(this._id);
   }
 
-  __repr__() {
-    //return f"{self.id}  -  {self.name} ({self.birth_date.strftime('%d.%m.%Y')})"
-  }
-
   async download_images() {
     try {
       const unclassifiedimages = readLines(FILE);

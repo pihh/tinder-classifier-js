@@ -1,5 +1,6 @@
 const fs = require("fs");
 const Jimp = require("jimp2");
+
 class TinderImage {
   constructor(name) {
     this.name = name;

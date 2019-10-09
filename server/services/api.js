@@ -1,15 +1,24 @@
 const fetch = require("node-fetch");
+const constants = require("../constants");
 
-const TINDER_URL = "https://api.gotinder.com";
-const LIMIT = {
-  MATCH: 100
-};
+const Profile = require("../factories/profile");
+const Person = require("../factories/person");
 
-const Profile = require("./profile");
-const Person = require("./person");
+const TINDER_URL = constants.TINDER_URL;
+const LIMIT = constants.LIMIT;
+
+let instance;
 
 class tinderAPI {
   constructor(token) {
+    if (instance) return instance;
+
+    this.setToken;
+
+    instance = this;
+  }
+
+  setToken(token) {
     this._token = token;
   }
 
@@ -90,7 +99,7 @@ class tinderAPI {
   }
 }
 
-module.exports = tinderAPI;
+module.exports = new tinderAPI();
 /*
     def matches(self, limit=10):
         data = requests.get(TINDER_URL + f"/v2/matches?count={limit}", headers={"X-Auth-Token": self._token}).json()

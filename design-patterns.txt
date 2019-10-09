@@ -1,0 +1,23 @@
+#Creational - controls the creation process of an object
+  Constructor Pattern,
+  Factory Pattern - used when we need to manage or manipulate collections of objects
+  Prototype Pattern - we use a sort of a “skeleton” of an existing object to create or instantiate new objects
+  Singleton Pattern
+
+#Structural - obtain new functionalities without tampering with the existing ones
+  Adapter Pattern,
+  Composite Pattern,
+  Decorator Pattern,
+  Façade Pattern,
+  Flyweight Pattern,
+  Proxy Pattern.
+
+#Behaviour - improving communication between dissimilar objects
+  Chain of Responsibility Pattern,
+  Command Pattern,
+  Iterator Pattern,
+  Mediator Pattern,
+  Observer Pattern,
+  State Pattern,
+  Strategy Pattern,
+  Template Pattern
