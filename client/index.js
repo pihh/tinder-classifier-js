@@ -1,9 +1,11 @@
 import * as tf from "@tensorflow/tfjs";
-import { Script } from "./src/scripts/script";
+import * as cocoSsd from "@tensorflow-models/coco-ssd";
 
 let model;
 let locked;
 let imageHadError;
+
+const API = "http://localhost:3000/";
 
 const $image = document.getElementById("image");
 // const ctx = canvas.getContext("2d");
@@ -14,7 +16,7 @@ const $image = document.getElementById("image");
     unlock();
     model = _model;
 
-    fetch("http://localhost:3000/classifier-render")
+    fetch(`${API}classifier-render`)
       .then(response => response.json())
       .then(data => {
         next(data);
@@ -23,6 +25,9 @@ const $image = document.getElementById("image");
 })();
 
 function lock() {
+  // https://cdn.dribbble.com/users/63485/screenshots/4388983/liquid-preloader_dribbble_v2.gif
+  if (locked) return;
+  $image.src = "/loading.gif";
   locked = true;
 }
 
@@ -33,7 +38,7 @@ function unlock() {
 function like() {
   if (locked) return;
   lock();
-  fetch("http://localhost:3000/classifier-like")
+  fetch(`${API}classifier-like`)
     .then(response => response.json())
     .then(data => {
       next(data);
@@ -43,7 +48,7 @@ function like() {
 function dislike() {
   if (locked) return;
   lock();
-  fetch("http://localhost:3000/classifier-dislike")
+  fetch(`${API}classifier-dislike`)
     .then(response => response.json())
     .then(data => {
       next(data);
@@ -58,6 +63,7 @@ function next(data = {}) {
       dislike();
     };
     img.onload = function() {
+      $image.src = img.src;
       imageHadError = false;
       model
         .detect(img)
@@ -73,15 +79,14 @@ function next(data = {}) {
         });
     };
 
-    img.src = "http://localhost:3000/images/unclassified/" + data.data;
-    $image.src = img.src;
+    img.src = `${API}images/unclassified/` + data.data;
   } else {
     alert("No more images, will scrape for more and try run again");
 
-    fetch("http://localhost:3000/scrape")
+    fetch(`${API}scrape`)
       .then(response => response.json())
       .then(() => {
-        fetch("http://localhost:3000/classifier-render")
+        fetch(`${API}classifier-render`)
           .then(_response => _response.json())
           .then(_data => {
             next(_data);
@@ -105,7 +110,7 @@ function cropImageFromPredictions(predictions, src) {
 }
 
 function cropImageFromPrediction(prediction, src) {
-  return fetch("http://localhost:3000/crop-image", {
+  return fetch(`${API}crop-image`, {
     method: "post",
     body: JSON.stringify({
       name: src,
@@ -140,5 +145,3 @@ document.addEventListener("keyup", function(event) {
 // Bind clicks
 document.getElementById("like").addEventListener("click", like);
 document.getElementById("dislike").addEventListener("click", dislike);
-
-new Script().run();

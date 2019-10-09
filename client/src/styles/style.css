@@ -9,12 +9,19 @@
   left: -10000px;
   top: -100000px;
 }
+
 #image {
   width: 400px;
   height: 400px;
   object-fit: cover;
 }
 
-button {
+button,
+#like,
+#dislike {
   cursor: pointer;
+}
+
+.icon {
+  height: 2rem;
 }
