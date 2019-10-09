@@ -1,0 +1,20 @@
+@import "./tailwind.base";
+
+@import "./tailwind.components";
+
+@import "./tailwind.utils";
+
+#measure {
+  position: absolute;
+  left: -10000px;
+  top: -100000px;
+}
+#image {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+}
+
+button {
+  cursor: pointer;
+}

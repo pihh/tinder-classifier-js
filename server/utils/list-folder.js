@@ -1,29 +1,31 @@
-const fs = require('fs');
+const fs = require("fs");
 
-const FOLDERS = ['unclassified', 'classified/positive', 'classified/negative'].map(el => `./images/${el}`);
+const FOLDERS = [
+  "unclassified",
+  "classified/positive",
+  "classified/negative"
+].map(el => `./images/${el}`);
 
-const _listFolder(folder){
-  return fs.readdirSync(folder).filter(el =>el != ".gitignore")
-}
+const _listFolder = function(folder) {
+  return fs.readdirSync(folder).filter(el => el != ".gitignore");
+};
 
-const negative(){
-  return _listFolder(FOLDERS[2])
-}
+const negative = function() {
+  return _listFolder(FOLDERS[2]);
+};
 
-const positive(){
+const positive = function() {
   return _listFolder(FOLDERS[1]);
-}
+};
 
-const unclassifiedImages (){
+const unclassified = function() {
   return _listFolder(FOLDERS[0]).filter(
-      el =>
-        el.indexOf("like_") == -1 &&
-        el.indexOf("dislike_") == -1 &&
-    );
-}
+    el => el.indexOf("like_") == -1 && el.indexOf("dislike_") == -1
+  );
+};
 
 module.exports = {
-  unclassifiedImages,
+  unclassified,
   positive,
   negative
-}
+};

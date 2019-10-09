@@ -10,19 +10,12 @@ const FOLDER = "./images/unclassified";
 const FAIL_RESPONSE = { success: false, data: "No more files..." };
 
 const fs = require("fs");
-
 const parseImage = require("../utils/parse-image");
+const listFolder = require("../utils/list-folder");
 const TinderImage = require("../factories/image");
 
 function getUnclassefiedImages() {
-  return fs
-    .readdirSync(FOLDER)
-    .filter(
-      el =>
-        el.indexOf("like_") == -1 &&
-        el.indexOf("dislike_") == -1 &&
-        el != ".gitignore"
-    );
+  return listFolder.unclassified();
 }
 
 let instance;

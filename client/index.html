@@ -1,5 +1,5 @@
 <head>
-  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/src/styles/style.css" />
   <!-- Load the coco-ssd model. -->
   <!-- Import TensorFlow.js -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
@@ -9,6 +9,18 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@1.0.0"></script>
 </head>
 <body>
+  <!--
+  <div>
+    <div class="bg-white rounded-lg p-6">
+      <img class="h-16 w-16 rounded-full mx-auto" src="avatar.jpg" />
+      <div class="text-center">
+        <h2 class="text-lg">Erin Lindford</h2>
+        <div class="text-purple-500">Customer Support</div>
+        <div class="text-gray-600">erinlindford@example.com</div>
+        <div class="text-gray-600">(555) 765-4321</div>
+      </div>
+    </div>
+  </div>
   <div id="measure"></div>
   <div>
     <img id="image" crossorigin="" />
@@ -19,6 +31,51 @@
     </button>
     <button id="like" class="btn btn-primary">Like</button>
   </div>
-
+  -->
+  <div
+    class="bg-white overflow-hidden border-t border-l border-r border-gray-400 p-4 px-3 py-10 bg-gray-200 flex justify-center"
+  >
+    <div class="w-full max-w-sm">
+      <div class="bg-white max-w-sm rounded-lg overflow-hidden shadow-lg">
+        <img
+          id="image"
+          class="w-full"
+          src="placeholder-loading.jpg"
+          alt="Classify this <3"
+        />
+        <div class="px-6 py-4">
+          <div class="font-bold text-xl mb-2">Hot or not ?</div>
+          <p class="text-gray-700 text-base">
+            Pihh's tinder classifier. Please wait a while until the first girl
+            appears on the screen. It might take a while for our system to load.
+            You can also use keyboard arrows to vote.
+          </p>
+        </div>
+        <div class="px-6 py-4">
+          <div class="lg:px-4">
+            <div
+              class="w-full p-2 bg-gray-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex"
+              role="alert"
+            >
+              <span
+                id="dislike"
+                class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs font-bold mr-3"
+                >NOT</span
+              >
+              <span class="font-semibold mr-2 text-left flex-auto"></span>
+              <span
+                id="like"
+                class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold ml-3"
+                >HOT</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="my-6 text-center text-gray-500 text-xs">
+        &copy;2019 Pihh the one. All rights reserved.
+      </p>
+    </div>
+  </div>
   <script src="./index.js"></script>
 </body>

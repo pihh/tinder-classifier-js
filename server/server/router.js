@@ -3,6 +3,8 @@ let instance;
 const TinderScraper = require("../utils/scraper");
 const TinderClassifier = require("../services/classifier");
 
+const listFolder = require("../utils/list-folder");
+
 const Router = router => {
   if (instance) return instance;
 
@@ -51,9 +53,22 @@ const Router = router => {
       });
   });
 
-  router.get("/list-classified-images", function(req, res) {
+  router.get("/list-classified-images", async function(req, res) {
+    const positive = listFolder.positive();
+    const negative = listFolder.negative();
+    const length = [positive, negative].reduce(
+      (cumulator, element) => (cumulator += element.length),
+      0
+    );
     res.status(200);
-    res.send(data);
+    res.send({
+      success: true,
+      data: {
+        positive,
+        negative,
+        length
+      }
+    });
   });
 
   router.post("/crop-image", function(req, res) {
