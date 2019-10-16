@@ -16,7 +16,7 @@ class TinderImage {
     let file;
 
     for (let i = 0; i < FOLDERS.length; i++) {
-      const path = "./images/" + FOLDERS[i] + this.name;
+      const path = "./storage/" + FOLDERS[i] + this.name;
       if (fs.existsSync(path)) {
         return path;
       }

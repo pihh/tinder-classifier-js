@@ -17,8 +17,8 @@ export const CONSTANTS = {
   IMAGE_WIDTH,
   IMAGE_HEIGHT,
   NUM_CLASSES, // number of label categories (a number can be 0-9, so there's 10 classes)
-  NUM_DATASET_ELEMENTS, //  number of images total (65,000)
-  NUM_TRAIN_ELEMENTS, // number of training images (55,000)
-  NUM_TEST_ELEMENTS, // number of test images (10,000, aka the remainder)
+  NUM_DATASET_ELEMENTS, //  number of storage total (65,000)
+  NUM_TRAIN_ELEMENTS, // number of training storage (55,000)
+  NUM_TEST_ELEMENTS, // number of test storage (10,000, aka the remainder)
   TRAIN_TEST_RATIO
 };

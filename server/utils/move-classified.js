@@ -1,8 +1,8 @@
 const fs = require("fs");
 
-const UNCLASSIFIED = "./images/unclassified";
-const POSITIVE = "./images/classified/positive";
-const NEGATIVE = "./images/classified/negative";
+const UNCLASSIFIED = "./storage/unclassified";
+const POSITIVE = "./storage/classified/positive";
+const NEGATIVE = "./storage/classified/negative";
 const FOLDERS = [POSITIVE, NEGATIVE];
 
 function rename(file, folderIndex) {

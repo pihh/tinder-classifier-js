@@ -36,7 +36,7 @@ const App = (function(app, router) {
 
     Router(router);
 
-    app.use("/images", express.static(path.resolve(__dirname, "../images")));
+    app.use("/storage", express.static(path.join(__dirname, '../storage')));
     app.use("/", router);
     app.listen(process.env.port || 3000);
   }

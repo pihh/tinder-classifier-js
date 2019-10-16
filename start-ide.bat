@@ -1,2 +1,2 @@
-atom .
+webstorm .
 exit

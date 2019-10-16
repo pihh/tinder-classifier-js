@@ -6,16 +6,16 @@ Part 1: Opening the pretrained mobilenet coco dataset as a Tensorflow graph
 You find the .bp file for the tensorflow mobilenet coco graph in my Github repository.
 Let's open it as a Tensorflow graph:
  */
-const FOLDER = "./images/unclassified";
+const FOLDER = "./storage/unclassified";
 const Jimp = require("jimp2");
 const moveClassified = require("./move-classified");
 
 /*
 Part 1: Opening the pretrained mobilenet coco dataset as a Tensorflow graph
-Part 2: Load in images as numpy arrays
+Part 2: Load in storage as numpy arrays
 Part 3: Call object detection API
 Part 4: Bringing it all together to find the person
-Part 5: Move all images into according classified folder
+Part 5: Move all storage into according classified folder
  */
 
 // STEP 0

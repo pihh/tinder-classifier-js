@@ -4,7 +4,7 @@ const FOLDERS = [
   "unclassified",
   "classified/positive",
   "classified/negative"
-].map(el => `./images/${el}`);
+].map(el => `./storage/${el}`);
 
 const _listFolder = function(folder) {
   return fs.readdirSync(folder).filter(el => el != ".gitignore");

@@ -11,7 +11,7 @@ to like a profile we find interesting.
 */
 
 const GENDERS = ["Any", "Female", "Male"];
-const FILE = "./images/unclassified.txt";
+const FILE = "./storage/unclassified.txt";
 
 const fs = require("fs");
 const readLines = require("../utils/read-lines");

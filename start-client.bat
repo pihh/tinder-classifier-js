@@ -1,3 +1,3 @@
 cd ./client
-parcel index.html
+npm run dev
 start chrome http://localhost:1234

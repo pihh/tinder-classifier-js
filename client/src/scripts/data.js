@@ -40,7 +40,7 @@ export class Data {
         CONSTANTS.NUM_TEST_ELEMENTS
       );
 
-      // Slice the the images and labels into train and test sets.
+      // Slice the the storage and labels into train and test sets.
       // Understand this slices
       this.trainImages = this.datasetImages.slice(
         0,

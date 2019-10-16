@@ -20,10 +20,13 @@ console.log({
 });
 */
 
-const token = "a470ac45-93af-439d-a912-51a101067606";
+const token = "a6a3ec60-22e1-4367-8436-d2c6f8b1b145";
 
 const TinderApi = require("./services/api").setToken(token);
 const TinderClassifier = require("./services/classifier");
 const App = require("./server");
 
 App.run();
+
+
+

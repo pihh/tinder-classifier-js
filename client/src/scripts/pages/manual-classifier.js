@@ -96,9 +96,9 @@ function next(data = {}) {
         });
     };
 
-    img.src = `${API}images/unclassified/` + data.data;
+    img.src = `${API}storage/unclassified/` + data.data;
   } else {
-    alert("No more images, will scrape for more and try run again");
+    alert("No more storage, will scrape for more and try run again");
 
     fetch(`${API}scrape`)
       .then(response => response.json())

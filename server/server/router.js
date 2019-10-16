@@ -42,18 +42,23 @@ const Router = router => {
   });
 
   router.get("/scrape", function(req, res) {
-    TinderScraper()
-      .then(data => {
-        res.status(200);
-        res.send(data);
-      })
-      .catch(ex => {
-        res.status(500);
-        res.send(ex);
-      });
+    try {
+      TinderScraper()
+          .then(data => {
+            res.status(200);
+            res.send(data);
+          })
+          .catch(ex => {
+            res.status(500);
+            res.send(ex);
+          });
+    }catch(ex){
+      res.status(500);
+      res.send(ex);
+    }
   });
 
-  router.get("/list-classified-images", async function(req, res) {
+  router.get("/list-classified-storage", async function(req, res) {
     const positive = listFolder.positive();
     const negative = listFolder.negative();
     const length = [positive, negative].reduce(

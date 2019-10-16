@@ -12,17 +12,17 @@ const Scraper = async (type = "tinder") => {
         await person.download_images();
       }
 
-      return Promise.resolve({
+      return {
         profile,
         matches,
         nearby
-      });
+      };
     }
 
     throw "Invalid Scraper type";
   } catch (ex) {
     console.warn(ex);
-    return promise.reject(ex);
+    throw ex
   }
 };
 
