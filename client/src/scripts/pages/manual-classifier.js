@@ -1,9 +1,11 @@
 import * as tf from "@tensorflow/tfjs";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 
-let model;
+// let model;
 let locked;
-let imageHadError;
+let currentImage;
+let images = [];
+let imageIndex = 0;
 
 const API = "http://localhost:3000/";
 
@@ -11,16 +13,17 @@ const $image = document.getElementById("image");
 
 function loadManualClassifier() {
   lock();
-  cocoSsd.load().then(_model => {
-    unlock();
-    model = _model;
-
+  // cocoSsd.load().then(_model => {
+  //   unlock();
+  //   model = _model;
+  //
     fetch(`${API}classifier-render`)
       .then(response => response.json())
       .then(data => {
-        next(data);
+        resetImages(data)
+        next();
       });
-  });
+  // });
   // bind key press listeners
   document.addEventListener("keyup", function(event) {
     if (event.defaultPrevented) {
@@ -52,92 +55,70 @@ function unlock() {
   locked = false;
 }
 
-function like() {
+function evaluate(type = 'like'){
   if (locked) return;
   lock();
-  fetch(`${API}classifier-like`)
-    .then(response => response.json())
-    .then(data => {
-      next(data);
-    });
+
+  fetch(`${API}classifier-${type}`,{
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      image: images[imageIndex]
+    })
+  }).then(response => response.json())
+      .then(data => {
+        console.log(data)
+      }).catch(ex =>{
+        console.warn(ex);
+      });
+  next();
+}
+function like() {
+  evaluate('like')
 }
 
 function dislike() {
-  if (locked) return;
-  lock();
-  fetch(`${API}classifier-dislike`)
-    .then(response => response.json())
-    .then(data => {
-      next(data);
-    });
+  evaluate('dislike')
 }
 
-function next(data = {}) {
-  if (data.success) {
+function next() {
+  if (images[imageIndex]) {
+    imageIndex++;
     var img = new Image();
     img.crossOrigin = "";
     img.onerror = function() {
-      dislike();
+      next();
     };
     img.onload = function() {
       $image.src = img.src;
-      imageHadError = false;
-      model
-        .detect(img)
-        .then(predictions => {
-          console.log("Predictions: ");
-          console.log({ predictions });
-          cropImageFromPredictions(predictions, data.data);
-          unlock();
-        })
-        .catch(ex => {
-          console.warn(ex);
-          unlock();
-        });
+      unlock();
     };
-
-    img.src = `${API}storage/unclassified/` + data.data;
+    currentImage = `storage/unclassified/${images[imageIndex]}`;
+    img.src = API + currentImage;
   } else {
+    lock();
     alert("No more storage, will scrape for more and try run again");
-
     fetch(`${API}scrape`)
       .then(response => response.json())
       .then(() => {
         fetch(`${API}classifier-render`)
           .then(_response => _response.json())
           .then(_data => {
-            next(_data);
+            resetImages(_data);
+            next();
           });
       });
   }
 }
 
-function cropImageFromPredictions(predictions, src) {
-  for (let i = 0; i < predictions.length; i++) {
-    if (predictions[i].class.indexOf("person") > -1) {
-      cropImageFromPrediction(predictions[i], src)
-        .then(success => {
-          console.log(success);
-        })
-        .catch(ex => {
-          console.log(ex);
-        });
-    }
-  }
+function resetImages(data){
+  images = data.data;
+  imageIndex = 0;
 }
-
-function cropImageFromPrediction(prediction, src) {
-  return fetch(`${API}crop-image`, {
-    method: "post",
-    body: JSON.stringify({
-      name: src,
-      measures: prediction.bbox
-    }),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }).then(response => response.json());
-}
+//
 
 export const ManualClassifier = {
   load: loadManualClassifier,

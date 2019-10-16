@@ -17,8 +17,9 @@ const Router = router => {
     res.send(TinderClassifier.render());
   });
 
-  router.get("/classifier-like", function(req, res) {
-    TinderClassifier.like()
+  router.post("/classifier-like", function(req, res) {
+    const image = req.body.image;
+    TinderClassifier.like(image)
       .then(data => {
         res.status(200);
         res.send(data);
@@ -29,8 +30,9 @@ const Router = router => {
       });
   });
 
-  router.get("/classifier-dislike", function(req, res) {
-    TinderClassifier.dislike()
+  router.post("/classifier-dislike", function(req, res) {
+    const image = req.body.image;
+    TinderClassifier.dislike(image)
       .then(data => {
         res.status(200);
         res.send(data);
@@ -43,6 +45,7 @@ const Router = router => {
 
   router.get("/scrape", function(req, res) {
     try {
+
       TinderScraper()
           .then(data => {
             res.status(200);

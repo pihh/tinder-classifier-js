@@ -24,21 +24,16 @@ class Classifier {
   constructor() {
     if (instance) return instance;
     // Get all the storage from folder
-    this.images = getUnclassefiedImages();
-    this.index = 0;
-    this.last = this.images.length - 1;
 
     instance = this;
   }
 
   render() {
     try {
-      if (this.images[0]) {
-        return {
-          success: true,
-          data: this.images[0]
-        };
-      }
+      this.images = getUnclassefiedImages();
+      return {
+        success: true, data: this.images
+      };
 
       throw "No storage";
     } catch (ex) {
@@ -46,47 +41,31 @@ class Classifier {
     }
   }
 
-  next_image() {
-    if (this.index === this.last) {
-      return FAIL_RESPONSE;
-    }
-
-    this.index++;
-
-    return {
-      success: true,
-      data: this.images[this.index]
-    };
-  }
-
-  evaluate(likes) {
+  evaluate(likes, image) {
     return new Promise((res, rej) => {
-      const image = this.images[this.index];
       const path = likes ? "/like_" : "/dislike_";
       fs.rename(FOLDER + "/" + image, FOLDER + path + image, err => {
         if (err) rej(err);
         parseImage(path + image)
           .then(data => {
-            res(this.next_image());
+            res({success: true});
           })
           .catch(ex => {
-            rej(ex);
+            rej({success: false, ex});
           });
       });
     });
   }
 
-  like() {
-    return this.evaluate(true);
+  like(image) {
+    return this.evaluate(true, image);
   }
 
-  dislike() {
-    return this.evaluate(false);
+  dislike(image) {
+    return this.evaluate(false, image);
   }
 
-  cropImage(name, x0, y0, x1, y1) {
-    return new TinderImage(name).crop(x0, y0, x1, y1);
-  }
+
 }
 
 module.exports = new Classifier();
