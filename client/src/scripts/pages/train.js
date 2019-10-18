@@ -1,8 +1,9 @@
 import * as tfvis from "@tensorflow/tfjs-vis";
 import { Data } from "../data";
 
-console.log(tfvis);
+
 import { CONSTANTS } from "../constants";
+
 
 async function showExamples(data) {
   // Create a container in the visor
@@ -37,6 +38,7 @@ async function showExamples(data) {
 async function run() {
   const data = new Data();
   await data.load();
+  await data.showImages()
   // await showExamples(data);
 
   // const model = getModel();

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "webpack-dev-server --host 0.0.0.0 --port 1234"
+    "dev": "webpack-dev-server --host 0.0.0.0 --port 314"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.6.2",

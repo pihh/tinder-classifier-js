@@ -26,6 +26,7 @@
               src="/public/images/placeholder-loading.gif"
               alt="Classify this <3"
             />
+            <canvas id="photo"></canvas>
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2 text-gray-800">Hot or not ?</div>
               <p class="text-gray-500 text-base">
@@ -34,26 +35,26 @@
                 to load. You can also use keyboard arrows to vote.
               </p>
             </div>
-            <div class="px-6 py-4">
-              <div class="lg:px-4">
-                <div
-                  class="w-full p-2 bg-gray-800 items-center text-indigo-100 leading-none rounded-full flex lg:inline-flex"
-                  role="alert"
-                >
-                  <span
-                    id="dislike"
-                    class="flex rounded-full bg-indigo-700 uppercase px-3 py-2 text-xs font-bold mr-3"
-                    >NOT</span
-                  >
-                  <span class="font-semibold mr-2 text-left flex-auto"></span>
-                  <span
-                    id="like"
-                    class="flex rounded-full bg-red-500 uppercase px-3 py-2 text-xs font-bold ml-3"
-                    >HOT</span
-                  >
-                </div>
-              </div>
-            </div>
+<!--            <div class="px-6 py-4">-->
+<!--              <div class="lg:px-4">-->
+<!--                <div-->
+<!--                  class="w-full p-2 bg-gray-800 items-center text-indigo-100 leading-none rounded-full flex lg:inline-flex"-->
+<!--                  role="alert"-->
+<!--                >-->
+<!--                  <span-->
+<!--                    id="dislike"-->
+<!--                    class="flex rounded-full bg-indigo-700 uppercase px-3 py-2 text-xs font-bold mr-3"-->
+<!--                    >NOT</span-->
+<!--                  >-->
+<!--                  <span class="font-semibold mr-2 text-left flex-auto"></span>-->
+<!--                  <span-->
+<!--                    id="like"-->
+<!--                    class="flex rounded-full bg-red-500 uppercase px-3 py-2 text-xs font-bold ml-3"-->
+<!--                    >HOT</span-->
+<!--                  >-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
           <p class="my-6 text-center text-gray-500 text-xs">
             &copy;2019 Pihh the one. All rights reserved.
@@ -62,7 +63,8 @@
       </div>
     </div>
   </div>
+  <script src="./index.js"></script>
   <script>
-    TinderAi.
+    const ai = TinderAi.Train.run();
   </script>
 </body>
