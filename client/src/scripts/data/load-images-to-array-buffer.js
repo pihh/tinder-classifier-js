@@ -1,29 +1,34 @@
 import loadAndHandleImage from "./load-and-handle-image";
-import {NUM_DATASET_ELEMENTS, IMAGE_SIZE} from '../constants'
+import {State} from "../state";
 
-export default async function loadImagesToArrayBuffer(
+export async function loadImagesToArrayBuffer(
     imagesArray = [],
-    numDatasetElements = NUM_DATASET_ELEMENTS ,
-    imageSize = IMAGE_SIZE ){
+    instance,
+    state = new State()){
 
-    let images;
-    let labels = [];
-    let datasetBytesBuffer = new ArrayBuffer(numDatasetElements * imageSize * 4);
+    const IMAGE_SIZE = state.IMAGE_SIZE;
+    const NUM_DATASET_ELEMENTS = state.NUM_DATASET_ELEMENTS;
+
+    let datasetBytesBuffer = new ArrayBuffer(NUM_DATASET_ELEMENTS * IMAGE_SIZE * 4);
+
+    if(!instance) instance = {datasetLabels: [], datasetImages: null}
+    
     try {
         for (let i = 0; i < imagesArray.length; i++) {
             datasetBytesBuffer = await loadAndHandleImage(imagesArray[i].src, {
                 arrayBuffer: datasetBytesBuffer,
-                byteOffset: i * imageSize * 4,
-                length: imageSize
+                byteOffset: i * IMAGE_SIZE * 4,
+                length: IMAGE_SIZE
             });
-            labels.push(imagesArray[i].label[0]);
-            labels.push(imagesArray[i].label[1]);
+            instance.datasetLabels.push(imagesArray[i].label[0]);
+            instance.datasetLabels.push(imagesArray[i].label[1]);
         }
-        images = new Float32Array(datasetBytesBuffer)
-        labels = new Uint8Array(labels);
+        instance.datasetImages = new Float32Array(datasetBytesBuffer)
+        instance.datasetLabels = new Uint8Array(instance.datasetLabels);
 
-        return {images,labels}
+        return instance;
     }catch(ex){
-
+        console.error(ex)
+        throw ex;
     }
 }

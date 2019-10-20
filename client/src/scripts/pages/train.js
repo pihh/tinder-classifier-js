@@ -1,8 +1,9 @@
 import * as tfvis from "@tensorflow/tfjs-vis";
 import { Data } from "../data";
+import {State} from "../state";
 
+const state = new State()
 
-import { CONSTANTS } from "../constants";
 
 
 async function showExamples(data) {
@@ -35,18 +36,36 @@ async function showExamples(data) {
   // }
 }
 
+function removeImage(){
+  try {
+    const el = document.getElementById('image');
+    el.parentNode.removeChild(el);
+
+    document.getElementById('like-percentage').style.display = "block";
+    document.getElementById('dislike-percentage').style.display = "block";
+    document.getElementById('number-of-samples').style.display = "block";
+    document.getElementById('number-of-samples').innerText = state.NUM_DATASET_ELEMENTS;
+
+  }catch(ex){
+    // ... Silence is golden
+  }
+}
+
+function setStateMessage(message){
+  try{
+    const el = document.getElementById('state');
+    el.innerHtml = message;
+  }catch(ex){
+    // ... Silence is golden
+  }
+}
+
 async function run() {
   const data = new Data();
   await data.load();
-  await data.showImages()
-  // await showExamples(data);
+  setTimeout(removeImage,state.SHOW_IMAGE_TIMEOUT);
+  await data.showExamples()
 
-  // const model = getModel();
-  // tfvis.show.modelSummary({ name: "Model Architecture" }, model);
-  //
-  // await train(model, data);
-  // await showAccuracy(model, data);
-  // await showConfusion(model, data);
 }
 
 async function train(model, data) {}

@@ -1,20 +1,13 @@
-import { CONSTANTS } from "./constants";
 import * as tf from "@tensorflow/tfjs";
+import {State} from "./state";
+import {loadImagesToArrayBuffer} from "./data/load-images-to-array-buffer";
+import {showExample} from "./data/show-example";
+import {showExamples} from "./data/show-examples";
 
-console.dir("@TODO: get image set meta and update NUM_DATASET_ELEMENTS");
-const API = "http://localhost:3000/";
-const STORAGE = `${API}storage/classified/`;
-
-let IMAGE_H = 256;
-let IMAGE_W = 256;
-let IMAGE_SIZE = IMAGE_H * IMAGE_W;
-let NUM_CLASSES = 2;
-let NUM_DATASET_ELEMENTS = 65000;
-let NUM_TRAIN_ELEMENTS = 55000;
-let NUM_TEST_ELEMENTS = NUM_DATASET_ELEMENTS - NUM_TRAIN_ELEMENTS;
 
 export class Data {
   constructor() {
+      this.state = new State();
     this.shuffledTrainIndex = 0;
     this.shuffledTestIndex = 0;
     this.imgResponse = [];
@@ -26,191 +19,114 @@ export class Data {
     this.testImages = [];
     this.testLabels = [];
 
-    this.img = new Image();
-    this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d');
-  }
-  //
-  async getImages() {
-    return [];
   }
 
-  loadImage(src, config = {}){
-      const img = new Image();
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      let image = [];
-      return new Promise((res,rej) => {
-          img.crossOrigin = '';
-          img.onload = () => {
-              img.width = img.naturalWidth;
-              img.height = img.naturalHeight;
-              canvas.width = img.width;
-              canvas.height = img.height;
-              ctx.drawImage(img, 0, 0, img.width, img.height);
+    async load() {
+        try {
 
-              const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-              if(!config.pushDataToSet) {
-                  for (let j = 0; j < imageData.data.length / 4; j++) {
-                      // All channels hold an equal value since the image is grayscale, so
-                      // just read the red channel.
-                      image.push(imageData.data[j * 4] / 255);
-                  }
-              }else{
-                  let startingIndex = config.pushDataToSet.i * IMAGE_SIZE;
-                  for (let j = 0; j < imageData.data.length / 4; j++) {
-                      // All channels hold an equal value since the image is grayscale, so
-                      // just read the red channel.
-                      // this.datasetImages.push(imageData.data[j * 4] / 255);
-                      this.datasetImages[startingIndex + j] = imageData.data[j * 4] / 255
-                  }
-              }
-              res(image);
-          }
-          img.src = STORAGE + src
-      });
-  }
-  async load() {
-    try {
-      const data = await fetch(`${API}list-classified-storage`)
-      const jsonData = await data.json();
-      const positive = jsonData.data.positive.map(el => {
-       const obj = {
-         src: 'positive/' + el,
-         label: [1,0]
-       }
-       return obj;
-     })
-      const negative = jsonData.data.negative.map(el => {
-        const obj = {
-          src: 'negative/' +el,
-          label: [0,1]
-        }
-        return obj;
-      });
-
-      const dataset = positive.concat(negative)
-
-      NUM_DATASET_ELEMENTS = dataset.length;
-      NUM_TRAIN_ELEMENTS = Math.floor(NUM_DATASET_ELEMENTS * 4 / 5);
-      NUM_TEST_ELEMENTS = Math.floor(NUM_DATASET_ELEMENTS / 5);
-
-      this.datasetLabels = new Uint8Array(NUM_DATASET_ELEMENTS * NUM_CLASSES);
-      this.datasetImages = new Float32Array(NUM_DATASET_ELEMENTS * IMAGE_SIZE * 4)
-
-
-      for(let i = 0 ; i < dataset.length; i++){
-        // SINGLE IMAGE, NO CHUNKS
-
-        const d = dataset[i];
-            await this.loadImage(dataset[i].src,{
-                pushDataToSet: {
-                    i
+            const data = await fetch(`${this.state.API}list-classified-storage`)
+            const jsonData = await data.json();
+            const positive = jsonData.data.positive.map(el => {
+                const obj = {
+                    src: 'positive/' + el,
+                    label: [1,0]
                 }
+                return obj;
+            })
+            const negative = jsonData.data.negative.map(el => {
+                const obj = {
+                    src: 'negative/' +el,
+                    label: [0,1]
+                }
+                return obj;
             });
-          this.datasetLabels[i*NUM_CLASSES] = d.label[0];
-          this.datasetLabels[i*NUM_CLASSES+1] = d.label[1]
-      }
 
+            const dataset = positive.concat(negative)
 
+            this.state.NUM_DATASET_ELEMENTS = dataset.length;
 
-        this.trainImages =
-            this.datasetImages.slice(0, IMAGE_SIZE * NUM_TRAIN_ELEMENTS);
-        this.testImages = this.datasetImages.slice(IMAGE_SIZE * NUM_TRAIN_ELEMENTS);
-        this.trainLabels =
-            this.datasetLabels.slice(0, NUM_CLASSES * NUM_TRAIN_ELEMENTS);
-        this.testLabels =
-            this.datasetLabels.slice(NUM_CLASSES * NUM_TRAIN_ELEMENTS);
+            this.datasetLabels = [];
+            this.datasetImages = new Float32Array(this.state.NUM_DATASET_ELEMENTS * this.state.IMAGE_SIZE * 4)
 
-    } catch (ex) {
-      //...
-      throw new Error(ex);
+            await loadImagesToArrayBuffer(dataset,this, this.state);
+
+            this.trainIndices = tf.util.createShuffledIndices(this.state.NUM_TRAIN_ELEMENTS);
+            this.testIndices = tf.util.createShuffledIndices(this.state.NUM_TEST_ELEMENTS);
+
+            this.trainImages =
+                this.datasetImages.slice(0, this.state.IMAGE_SIZE * this.state.NUM_TRAIN_ELEMENTS);
+            this.testImages = this.datasetImages.slice(this.state.IMAGE_SIZE * this.state.NUM_TRAIN_ELEMENTS);
+            this.trainLabels =
+                this.datasetLabels.slice(0, this.state.NUM_CLASSES * this.state.NUM_TRAIN_ELEMENTS);
+            this.testLabels =
+                this.datasetLabels.slice(this.state.NUM_CLASSES * this.state.NUM_TRAIN_ELEMENTS);
+
+        } catch (ex) {
+            console.error(ex)
+            //...
+            throw new Error(ex);
+        }
     }
+
+
+
+    nextTrainBatch(batchSize) {
+        return this.nextBatch(batchSize, 'TRAIN');
+    }
+
+    nextTestBatch(batchSize) {
+        return this.nextBatch(batchSize, 'TEST');
+    }
+
+    nextBatch(batchSize, type = 'TEST') {
+        const batchImagesArray = new Float32Array(batchSize * this.state.IMAGE_SIZE);
+        const batchLabelsArray = new Uint8Array(batchSize * this.state.NUM_CLASSES);
+
+        let idx = 0;
+        let data = [];
+        if(type === 'TEST'){
+            data = [this.testImages, this.testLabels];
+            this.shuffledTestIndex =
+                (this.shuffledTestIndex + 1) % this.testIndices.length;
+            idx = this.testIndices[this.shuffledTestIndex];
+        }else {
+            data = [this.trainImages, this.trainLabels];
+            this.shuffledTrainIndex =
+                (this.shuffledTrainIndex + 1) % this.trainIndices.length;
+            idx = this.trainIndices[this.shuffledTrainIndex];
+        }
+
+        for (let i = 0; i < batchSize; i++) {
+
+            const image =
+                data[0].slice(idx * this.state.IMAGE_SIZE, idx * this.state.IMAGE_SIZE + this.state.IMAGE_SIZE);
+            batchImagesArray.set(image, i * this.state.IMAGE_SIZE);
+
+            const label =
+                data[1].slice(idx * this.state.NUM_CLASSES, idx * this.state.NUM_CLASSES + this.state.NUM_CLASSES);
+            batchLabelsArray.set(label, i * this.state.NUM_CLASSES);
+        }
+
+        const xs = tf.tensor2d(batchImagesArray, [batchSize, this.state.IMAGE_SIZE]);
+        const labels = tf.tensor2d(batchLabelsArray, [batchSize, this.state.NUM_CLASSES]);
+
+        return {xs, labels};
   }
 
-  getTrainData(){
+  async showExamples(howMany = 2){
+    // Vai buscar 1 imagem e mete-a no canvas -> easy
+    const index = 0;
+    const imgStart = index * this.state.IMAGE_SIZE;
+    const imgEnd = imgStart + this.state.IMAGE_SIZE * howMany;
 
+    const labelStart = index * this.state.NUM_CLASSES;
+    const labelEnd = labelStart + this.state.NUM_CLASSES * howMany;
+
+    const images = this.datasetImages.slice(imgStart,imgEnd);
+    const labels = this.datasetLabels.slice(labelStart,labelEnd);
+
+    await showExamples(images,labels)
   }
-
-  getTestData(size) {
-
-  }
-
-  async showImages(batchSize = 2) {
-      debugger
-      const canvas = document.getElementById( "photo" );
-      const ctx = canvas.getContext('2d');
-      const image =
-          this.datasetImages.slice(0, IMAGE_SIZE);
-      const batchImagesArray = new Float32Array(1 * IMAGE_SIZE);
-      const xs = tf.tensor2d(batchImagesArray, [1, IMAGE_SIZE]);
-      const imageTensor = tf.tidy(() => {
-          // Reshape the image to 28x28 px
-          return xs.reshape([IMAGE_H, IMAGE_W, 1]);
-      });
-
-
-      canvas.width = IMAGE_W;
-      canvas.height = IMAGE_H;
-      canvas.style = 'margin: 4px;';
-      tf.browser.toPixels(imageTensor, canvas);
-
-      //
-      // imageTensor.dispose();
-
-      /*
-      const batchImagesArray = new Float32Array(1 * IMAGE_SIZE);
-      const batchLabelsArray = new Uint8Array(1 * NUM_CLASSES);
-
-      for (let i = 0; i < batchSize; i++) {
-
-
-          const image =
-              this.datasetImages.slice(i * IMAGE_SIZE, i * IMAGE_SIZE + IMAGE_SIZE);
-          batchImagesArray.set(image, IMAGE_SIZE);
-
-          const label =
-              this.datasetLabels.slice(i * NUM_CLASSES, i * NUM_CLASSES + NUM_CLASSES);
-          batchLabelsArray.set(label, NUM_CLASSES);
-
-          const xs = tf.tensor2d(batchImagesArray, [1, IMAGE_SIZE]);
-          const labels = tf.tensor2d(batchLabelsArray, [1, NUM_CLASSES]);
-
-          console.log({xs,labels})
-          const putImage = new Promise(resolve => {
-              setTimeout(()=>{
-
-
-
-                  const imageTensor = tf.tidy(() => {
-                      // Reshape the image to 28x28 px
-                      return xs.reshape([IMAGE_H, IMAGE_W, 1]);
-                  });
-
-
-                  canvas.width = IMAGE_W;
-                  canvas.height = IMAGE_H;
-                  canvas.style = 'margin: 4px;';
-                  tf.browser.toPixels(imageTensor, canvas);
-
-
-                  imageTensor.dispose();
-
-                  resolve();
-              }, 1000);
-          });
-          await putImage;
-      }
-
-
-
-      console.log({xs, labels})
-
-    */
-
-
-  }
-
-
-
 }
+
+

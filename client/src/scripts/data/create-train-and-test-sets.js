@@ -1,14 +1,16 @@
-import {NUM_DATASET_ELEMENTS, IMAGE_SIZE , NUM_TRAIN_ELEMENTS, NUM_TEST_ELEMENTS, NUM_CLASSES} from "../constants";
+import {State} from "../state";
 
 export function createTrainAndTestSets(
     images = [],
     labels = [],
-    numDatasetElements = NUM_DATASET_ELEMENTS ,
-    numTrainElements = NUM_TRAIN_ELEMENTS,
-    numTestElements = NUM_TEST_ELEMENTS,
-    imageSize = IMAGE_SIZE,
-    numClasses = NUM_CLASSES
+    state = new State()
     ){
+
+    const NUM_DATASET_ELEMENTS = state.NUM_DATASET_ELEMENTS;
+    const IMAGE_SIZE = state.IMAGE_SIZE;
+    const NUM_TRAIN_ELEMENTS = state.NUM_TRAIN_ELEMENTS;
+    const NUM_TEST_ELEMENTS = state.NUM_TEST_ELEMENTS;
+    const NUM_CLASSES = state.NUM_CLASSES;
 
     return {
         train: {

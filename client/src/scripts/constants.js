@@ -1,15 +1,19 @@
-export const IMAGE_WIDTH = 28;
-export const IMAGE_HEIGHT = 28;
+export const IMAGE_WIDTH = 256; // 28
+export const IMAGE_HEIGHT = 256;// 28
 export const IMAGE_CHANNELS = 1;
 export const IMAGE_SIZE = IMAGE_WIDTH * IMAGE_HEIGHT;
 export const TRAIN_TEST_RATIO = 5 / 6;
 
-export const NUM_CLASSES = 2;
+export const CLASS_NAMES = ["like", "dislike"];
+
+export const NUM_CLASSES = CLASS_NAMES.length;
 export const NUM_DATASET_ELEMENTS = 65000;
 export const NUM_TRAIN_ELEMENTS = Math.floor(TRAIN_TEST_RATIO * NUM_DATASET_ELEMENTS);
 export const NUM_TEST_ELEMENTS = NUM_DATASET_ELEMENTS - NUM_TRAIN_ELEMENTS;
+export const SHOW_IMAGE_TIMEOUT = 2000;
 
-export const CLASS_NAMES = ["like", "dislike"];
+export const API = "http://localhost:3000/";
+export const STORAGE = `${API}storage/classified/`;
 
 export const CONSTANTS = {
   CLASS_NAMES,
@@ -21,6 +25,9 @@ export const CONSTANTS = {
   NUM_DATASET_ELEMENTS, //  number of storage total (65,000)
   NUM_TRAIN_ELEMENTS, // number of training storage (55,000)
   NUM_TEST_ELEMENTS, // number of test storage (10,000, aka the remainder)
-  TRAIN_TEST_RATIO
+  TRAIN_TEST_RATIO,
+  API,
+  STORAGE,
+  SHOW_IMAGE_TIMEOUT
 };
 

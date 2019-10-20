@@ -1,45 +1,34 @@
-import * as tf from '@tensorflow/tfjs'
-import {IMAGE_SIZE} from '../constants'
 
-export async function showExamples(images, imgSize = IMAGE_SIZE, config = {
+import {State} from "../state";
+import {showExample} from "./show-example";
+import {SHOW_IMAGE_TIMEOUT} from "../constants";
+
+export async function showExamples(images,labels,state = new State(), config = {
     canvasId: 'photo'
 }){
     console.log('Will show 10 images')
 
+    const IMAGE_SIZE = state.IMAGE_SIZE;
+    const LABEL_SIZE = state.NUM_CLASSES;
     const canvas = document.getElementById( config.canvasId || 'photo' );
     const ctx = canvas.getContext('2d');
 
-    for(let i = 0; i < 10; i++){
-        let image = images[i];
+    const numImages = images.length / IMAGE_SIZE;
+
+    for(let i = 0; i < numImages; i++){
+        const startImg = i * IMAGE_SIZE;
+        const endImg = startImg + IMAGE_SIZE;
+        const startLabel = i * LABEL_SIZE;
+        const endLabel = startLabel + LABEL_SIZE;
+
+        const image = images.slice(startImg,endImg);
+        const label = labels.slice(startLabel,endLabel)
+
         const putImage = new Promise(resolve => {
             setTimeout(()=>{
-                console.log('set image !!!', image.map(el => el *250))
-                const batchImagesArray = new Float32Array(1 * imgSize);
-                batchImagesArray.set(image,0);
-                const xs = tf.tensor2d(batchImagesArray, [1, imgSize]);
-
-                const imageTensor = tf.tidy(() => {
-                    // Reshape the image to 28x28 px
-                    return xs.reshape([28, 28, 1]);
-                });
-
-
-                canvas.width = IMAGE_W;
-                canvas.height = IMAGE_H;
-                canvas.style = 'margin: 4px;';
-                tf.browser.toPixels(imageTensor, canvas);
-
-
-                // imageTensor.dispose();
-                // const labels = tf.tensor2d(batchLabelsArray, [batchSize, NUM_CLASSES]);
-                // Get a pointer to the current location in the image.
-//                 var palette = ctx.getImageData(0,0,IMAGE_W,IMAGE_H); //x,y,w,h
-// // Wrap your array as a Uint8ClampedArray
-//                 palette.data.set(new Uint8ClampedArray(image.map(el => el *250))); // assuming values 0..255, RGBA, pre-mult.
-// // Repost the data.
-//                 ctx.putImageData(palette,0,0);
+                showExample(image, label);
                 resolve();
-            }, 1000);
+            }, state.SHOW_IMAGE_TIMEOUT);
         });
         await putImage;
     }
