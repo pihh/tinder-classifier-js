@@ -20,3 +20,13 @@ button,
   height: 2rem;
 }
 
+#number-of-samples-container, #like-probability-container, #dislike-probability-container{
+  display: none;
+}
+.tf-draw-area canvas{
+  display: inline-block;
+  max-width: 50%;
+}
+.vega-embed canvas{
+  max-width: 100%
+}

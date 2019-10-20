@@ -3,6 +3,8 @@ import {State} from "./state";
 import {loadImagesToArrayBuffer} from "./data/load-images-to-array-buffer";
 import {showExample} from "./data/show-example";
 import {showExamples} from "./data/show-examples";
+import {shuffleDataset} from "./helpers/shuffle";
+import {hideImage} from "./pages/DOM/train";
 
 
 export class Data {
@@ -41,7 +43,8 @@ export class Data {
                 return obj;
             });
 
-            const dataset = positive.concat(negative)
+            const dataset = shuffleDataset(positive.concat(negative));
+
 
             this.state.NUM_DATASET_ELEMENTS = dataset.length;
 
@@ -85,20 +88,23 @@ export class Data {
 
         let idx = 0;
         let data = [];
+        let fnIndex = (type = 'TEST')=>{
+            let types = ['Train', 'train'];
+            if(type === "TEST") {
+                types = ['shuffledTestIndex', 'testIndices'];
+            }
+            this[types[0]] =
+                (this[types[0]]+ 1) % this[types[1]].length;
+            return this[types[1]][this[types[0]]];
+        }
         if(type === 'TEST'){
             data = [this.testImages, this.testLabels];
-            this.shuffledTestIndex =
-                (this.shuffledTestIndex + 1) % this.testIndices.length;
-            idx = this.testIndices[this.shuffledTestIndex];
         }else {
             data = [this.trainImages, this.trainLabels];
-            this.shuffledTrainIndex =
-                (this.shuffledTrainIndex + 1) % this.trainIndices.length;
-            idx = this.trainIndices[this.shuffledTrainIndex];
         }
 
         for (let i = 0; i < batchSize; i++) {
-
+            idx = fnIndex();
             const image =
                 data[0].slice(idx * this.state.IMAGE_SIZE, idx * this.state.IMAGE_SIZE + this.state.IMAGE_SIZE);
             batchImagesArray.set(image, i * this.state.IMAGE_SIZE);
@@ -127,6 +133,20 @@ export class Data {
     const labels = this.datasetLabels.slice(labelStart,labelEnd);
 
     await showExamples(images,labels)
+  }
+
+  displayTensorImageOnCanvas(tensor){
+    const img = tensor.xs.dataSync().toString().split(',').map(el => el*255);
+    var canvas = document.getElementById("photo"),
+          ctx = canvas.getContext("2d");
+
+// Get a pointer to the current location in the image.
+      var palette = ctx.getImageData(0,0,160,120); //x,y,w,h
+// Wrap your array as a Uint8ClampedArray
+      palette.data.set(new Uint8ClampedArray(img)); // assuming values 0..255, RGBA, pre-mult.
+// Repost the data.
+      ctx.putImageData(palette,0,0);
+      hideImage();
   }
 }
 
