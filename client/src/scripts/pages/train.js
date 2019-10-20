@@ -2,15 +2,17 @@ import * as tfvis from "@tensorflow/tfjs-vis";
 import { Data } from "../data";
 import {State} from "../state";
 
-const state = new State()
+const state = new State();
+const data = new Data();
 
 
-
-async function showExamples(data) {
+async function showExamples() {
+  setTimeout(removeImage, state.SHOW_IMAGE_TIMEOUT);
+  data.showExamples()
   // Create a container in the visor
-  const surface = tfvis
-    .visor()
-    .surface({ name: "Input Data Examples", tab: "Input Data" });
+  // const surface = tfvis
+  //   .visor()
+  //   .surface({ name: "Input Data Examples", tab: "Input Data" });
 
   // Get the examples
   // const examples = data.nextTestBatch(20);
@@ -37,15 +39,19 @@ async function showExamples(data) {
 }
 
 function removeImage(){
+  const el = document.getElementById('image');
+  el.parentNode.removeChild(el);
+}
+function loaded(){
   try {
-    const el = document.getElementById('image');
-    el.parentNode.removeChild(el);
-
-    document.getElementById('like-percentage').style.display = "block";
-    document.getElementById('dislike-percentage').style.display = "block";
-    document.getElementById('number-of-samples').style.display = "block";
+    document.getElementById('image').src = 'public/images/check-mark.gif';
+    document.getElementById('like-percentage-container').style.display = "block";
+    document.getElementById('dislike-percentage-container').style.display = "block";
+    document.getElementById('number-of-samples-container').style.display = "block";
     document.getElementById('number-of-samples').innerText = state.NUM_DATASET_ELEMENTS;
-
+    document.getElementById('train').classList.remove('cursor-not-allowed');
+    document.getElementById('show-examples').classList.remove('cursor-not-allowed');
+    setStateMessage('All images and labels loaded with success');
   }catch(ex){
     // ... Silence is golden
   }
@@ -61,11 +67,12 @@ function setStateMessage(message){
 }
 
 async function run() {
-  const data = new Data();
-  await data.load();
-  setTimeout(removeImage,state.SHOW_IMAGE_TIMEOUT);
-  await data.showExamples()
-
+  try {
+    await data.load();
+    loaded();
+  }catch(ex){
+    alert('There was some error loading the data. Please check your internet connection and try again later');
+  }
 }
 
 async function train(model, data) {}
@@ -77,5 +84,6 @@ async function showConfusion(model, data) {}
 function getModel() {}
 
 export const Train = {
-  run
+  run,
+  showExamples
 };

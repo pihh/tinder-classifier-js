@@ -3,9 +3,11 @@
   <link rel="stylesheet" href="/public/styles/tailwind.components.css" />
   <link rel="stylesheet" href="/public/styles/tailwind.utils.css" />
   <link rel="stylesheet" href="/public/styles/style.css" />
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@1.0.0"></script> -->
+  <style>
+    #number-of-samples-container, #like-probability-container, #dislike-probability-container{
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="flex flex-row flex-wrap h-full bg-gray-200">
@@ -39,13 +41,13 @@
                 All buttons will be unlocked and a message<br>
                 will be displayed here when ready<br>
               </p>
-              <p class="text-gray-500 text-base" style="display: none">
-                Like: <span id="like-probability" style="display: none">0</span>%
+              <p class="text-gray-500 text-base" id="like-probability-container">
+                Like: <span id="like-probability" >0</span>%
               </p>
-              <p class="text-gray-500 text-base" >
+              <p class="text-gray-500 text-base" id="dislike-probability-container">
                 Dislike: <span id="dislike-probability">0</span>%
               </p>
-              <p class="text-gray-500 text-base" >
+              <p class="text-gray-500 text-base" id="number-of-samples-container">
                 Number of samples: <span id="number-of-samples">0</span>%
               </p>
             </div>
@@ -60,13 +62,13 @@
         </div>
       </div>
       <div class="text-center">
-        <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+        <button class=" cursor-not-allowed bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onclick="TinderAi.Train.showExamples()" id="show-examples">
           Show Examples
         </button>
-        <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+        <button class="cursor-not-allowed bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onclick="TinderAi.Train.trainModel()" id="train">
           &nbsp;Train Model&nbsp;
         </button>
-     
+
       </div>
       <p class="my-6 text-center text-gray-500 text-xs">
         &copy;2019 Pihh the one. All rights reserved.

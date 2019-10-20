@@ -7,7 +7,7 @@ import {showExamples} from "./data/show-examples";
 
 export class Data {
   constructor() {
-      this.state = new State();
+    this.state = new State();
     this.shuffledTrainIndex = 0;
     this.shuffledTestIndex = 0;
     this.imgResponse = [];
@@ -18,7 +18,7 @@ export class Data {
     this.trainLabels = [];
     this.testImages = [];
     this.testLabels = [];
-
+    this.loaded = false;
   }
 
     async load() {
@@ -61,6 +61,7 @@ export class Data {
             this.testLabels =
                 this.datasetLabels.slice(this.state.NUM_CLASSES * this.state.NUM_TRAIN_ELEMENTS);
 
+            this.lodaded = true;
         } catch (ex) {
             console.error(ex)
             //...
