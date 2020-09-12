@@ -19,7 +19,7 @@
     "gm": "^1.23.1",
     "jimp2": "^2.0.0",
     "ml-regression": "^5.0.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "request": "^2.88.0",
     "sharp": "^0.23.1",
     "smartcrop": "^2.0.3",
